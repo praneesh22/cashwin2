@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CashWin - Earn Real Money</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.5s ease;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: white;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .dashboard {
+            display: none;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .wallet-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .wallet-balance {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .wallet-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .game-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .game-btn {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .game-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .game-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .game-btn h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .game-btn p {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: rgba(102, 126, 234, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            animation: slideIn 0.3s ease;
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .scratch-card {
+            width: 300px;
+            height: 200px;
+            margin: 20px auto;
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .scratch-surface {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            cursor: crosshair;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+
+        .scratch-result {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            font-weight: 700;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .slot-machine-container {
+            width: 350px;
+            height: 250px;
+            margin: 20px auto;
+            background: linear-gradient(135deg, #2d3748, #1a202c);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 4px solid #ffd93d;
+        }
+
+        .slot-machine {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .slot-reel {
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(135deg, #fff, #e2e8f0);
+            border: 3px solid #ffd93d;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: #2d3748;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slot-reel.spinning {
+            animation: slotSpin 0.5s linear infinite;
+        }
+
+        @keyframes slotSpin {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100px); }
+        }
+
+        .slot-symbol {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .slot-result {
+            text-align: center;
+            color: #ffd93d;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            min-height: 30px;
+        }
+
+        .slot-lever {
+            width: 60px;
+            height: 120px;
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            border-radius: 30px;
+            margin: 0 auto;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 3px solid #fff;
+        }
+
+        .slot-lever:hover {
+            transform: scale(1.05);
+        }
+
+        .slot-lever:active {
+            transform: scale(0.95);
+        }
+
+        .slot-lever-ball {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #fff, #e2e8f0);
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .slot-lever.pulled {
+            animation: leverPull 0.5s ease-in-out;
+        }
+
+        @keyframes leverPull {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(-30deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .win-animation {
+            animation: winPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes winPulse {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.1); filter: brightness(1.3); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes scratchSpot {
+            0% { 
+                opacity: 0;
+                transform: scale(0);
+            }
+            100% { 
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .prank-reveal {
+            display: none;
+            text-align: center;
+            color: white;
+        }
+
+        .prank-reveal h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .prank-reveal p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .processing {
+            text-align: center;
+            color: white;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            margin-top: auto;
+        }
+
+        footer a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .glass-card {
+                padding: 35px 25px;
+                max-width: 450px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 8px;
+                min-height: 100vh;
+            }
+
+            .glass-card {
+                padding: 25px 20px;
+                max-width: 100%;
+                margin: 0 10px;
+            }
+
+            .logo h1 {
+                font-size: 24px;
+            }
+
+            .logo p {
+                font-size: 13px;
+            }
+
+            .form-group label {
+                font-size: 13px;
+            }
+
+            .form-group input {
+                font-size: 16px;
+                padding: 12px 14px;
+            }
+
+            .btn {
+                font-size: 15px;
+                padding: 12px;
+            }
+
+            .wallet-balance {
+                font-size: 32px;
+            }
+
+            .wallet-label {
+                font-size: 13px;
+            }
+
+            .game-buttons {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .game-btn {
+                padding: 15px;
+            }
+
+            .game-btn h3 {
+                font-size: 16px;
+            }
+
+            .game-btn p {
+                font-size: 11px;
+            }
+
+            .scratch-card {
+                width: 280px;
+                height: 180px;
+            }
+            
+            .scratch-surface {
+                font-size: 16px;
+            }
+            
+            .scratch-result {
+                font-size: 32px;
+            }
+
+            .slot-machine-container {
+                width: 320px;
+                height: 220px;
+                padding: 15px;
+                margin: 15px auto;
+            }
+            
+            .slot-reel {
+                width: 75px;
+                height: 85px;
+                font-size: 40px;
+            }
+            
+            .slot-symbol {
+                font-size: 40px;
+            }
+            
+            .slot-result {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+            
+            .slot-lever {
+                width: 55px;
+                height: 110px;
+            }
+            
+            .slot-lever-ball {
+                width: 35px;
+                height: 35px;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+                margin: 10px;
+                max-width: calc(100% - 20px);
+            }
+
+            .modal-content h2 {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 5px;
+            }
+
+            .glass-card {
+                padding: 20px 15px;
+                margin: 0 5px;
+            }
+
+            .logo h1 {
+                font-size: 22px;
+            }
+
+            .logo p {
+                font-size: 12px;
+            }
+
+            .form-group label {
+                font-size: 12px;
+                margin-bottom: 6px;
+            }
+
+            .form-group input {
+                font-size: 16px;
+                padding: 10px 12px;
+            }
+
+            .btn {
+                font-size: 14px;
+                padding: 10px;
+                margin-bottom: 8px;
+            }
+
+            .wallet-balance {
+                font-size: 28px;
+            }
+
+            .wallet-label {
+                font-size: 12px;
+            }
+
+            .game-btn {
+                padding: 12px;
+            }
+
+            .game-btn h3 {
+                font-size: 15px;
+            }
+
+            .game-btn p {
+                font-size: 10px;
+            }
+
+            .scratch-card {
+                width: 260px;
+                height: 160px;
+            }
+            
+            .scratch-surface {
+                font-size: 15px;
+            }
+            
+            .scratch-result {
+                font-size: 30px;
+            }
+
+            .slot-machine-container {
+                width: 280px;
+                height: 190px;
+                padding: 12px;
+                margin: 10px auto;
+            }
+            
+            .slot-reel {
+                width: 65px;
+                height: 75px;
+                font-size: 32px;
+            }
+            
+            .slot-symbol {
+                font-size: 32px;
+            }
+            
+            .slot-result {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+            
+            .slot-lever {
+                width: 45px;
+                height: 90px;
+            }
+            
+            .slot-lever-ball {
+                width: 28px;
+                height: 28px;
+            }
+
+            .modal-content {
+                padding: 25px 15px;
+                margin: 5px;
+                max-width: calc(100% - 10px);
+            }
+
+            .modal-content h2 {
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+
+            .modal-content p {
+                font-size: 13px;
+            }
+
+            .prank-reveal h2 {
+                font-size: 36px;
+            }
+
+            .prank-reveal p {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .glass-card {
+                padding: 15px 12px;
+                margin: 0 2px;
+            }
+
+            .logo h1 {
+                font-size: 20px;
+            }
+
+            .logo p {
+                font-size: 11px;
+            }
+
+            .form-group input {
+                padding: 8px 10px;
+            }
+
+            .btn {
+                font-size: 13px;
+                padding: 8px;
+            }
+
+            .wallet-balance {
+                font-size: 24px;
+            }
+
+            .scratch-card {
+                width: 240px;
+                height: 140px;
+            }
+            
+            .scratch-surface {
+                font-size: 14px;
+            }
+            
+            .scratch-result {
+                font-size: 28px;
+            }
+
+            .slot-machine-container {
+                width: 250px;
+                height: 170px;
+                padding: 10px;
+                margin: 8px auto;
+            }
+            
+            .slot-reel {
+                width: 55px;
+                height: 65px;
+                font-size: 28px;
+            }
+            
+            .slot-symbol {
+                font-size: 28px;
+            }
+            
+            .slot-result {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+            
+            .slot-lever {
+                width: 40px;
+                height: 80px;
+            }
+            
+            .slot-lever-ball {
+                width: 25px;
+                height: 25px;
+            }
+
+            .modal-content {
+                padding: 20px 12px;
+                margin: 2px;
+                max-width: calc(100% - 4px);
+            }
+
+            .modal-content h2 {
+                font-size: 16px;
+            }
+
+            .prank-reveal h2 {
+                font-size: 32px;
+            }
+
+            .prank-reveal p {
+                font-size: 14px;
+            }
+
+            footer {
+                padding: 15px 10px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .scratch-card {
+                width: 220px;
+                height: 120px;
+            }
+            
+            .scratch-surface {
+                font-size: 13px;
+            }
+            
+            .scratch-result {
+                font-size: 24px;
+            }
+
+            .slot-machine-container {
+                width: 220px;
+                height: 150px;
+                padding: 8px;
+            }
+            
+            .slot-reel {
+                width: 50px;
+                height: 60px;
+                font-size: 24px;
+            }
+            
+            .slot-symbol {
+                font-size: 24px;
+            }
+            
+            .slot-lever {
+                width: 35px;
+                height: 70px;
+            }
+            
+            .slot-lever-ball {
+                width: 22px;
+                height: 22px;
+            }
+        }
+
+        /* Landscape orientation adjustments */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .container {
+                min-height: 100vh;
+                padding: 5px;
+            }
+
+            .glass-card {
+                padding: 15px;
+                margin: 5px;
+            }
+
+            .logo h1 {
+                font-size: 20px;
+                margin-bottom: 5px;
+            }
+
+            .logo p {
+                font-size: 11px;
+                margin-bottom: 15px;
+            }
+
+            .form-group {
+                margin-bottom: 10px;
+            }
+
+            .btn {
+                padding: 8px;
+                margin-bottom: 5px;
+            }
+
+            .scratch-card {
+                width: 250px;
+                height: 130px;
+                margin: 10px auto;
+            }
+
+            .slot-machine-container {
+                width: 300px;
+                height: 160px;
+                padding: 10px;
+                margin: 10px auto;
+            }
+        }
+
+        /* Touch-friendly adjustments */
+        @media (hover: none) and (pointer: coarse) {
+            .game-btn:hover {
+                transform: none;
+            }
+
+            .slot-lever:hover {
+                transform: none;
+            }
+
+            .btn:hover {
+                transform: none;
+            }
+
+            .game-btn:active {
+                transform: scale(0.95);
+                background: rgba(255, 255, 255, 0.3);
+            }
+
+            .slot-lever:active {
+                transform: scale(0.9);
+            }
+
+            .btn:active {
+                transform: scale(0.98);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login/Signup Page -->
+        <div id="loginPage" class="glass-card">
+            <div class="logo">
+                <h1> CashWin</h1>
+                <p>Earn Real Money Online</p>
+            </div>
+            
+            <!-- Toggle Buttons -->
+            <div class="toggle-buttons" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button type="button" class="btn btn-secondary" id="signupTabBtn" onclick="showSignup()" style="flex: 1;">Sign Up</button>
+                <button type="button" class="btn btn-primary" id="loginTabBtn" onclick="showLogin()" style="flex: 1;">Login</button>
+            </div>
+            
+            <!-- Signup Form -->
+            <form id="signupForm" style="display: none;">
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create password (min 6 chars)" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Account</button>
+            </form>
+            
+            <!-- Login Form -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login Now</button>
+            </form>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard glass-card">
+            <div class="wallet-card">
+                <div class="wallet-label">Current Balance</div>
+                <div class="wallet-balance">500</div>
+                <div class="wallet-label">Indian Rupees (INR)</div>
+            </div>
+
+            <div class="game-buttons">
+                <div class="game-btn" id="scratchCardBtn" onclick="openScratchCard()">
+                    <h3> Scratch Card</h3>
+                    <p>Win up to 20</p>
+                </div>
+                <div class="game-btn" id="slotMachineBtn" onclick="openSlotMachine()">
+                    <h3> Slot Machine</h3>
+                    <p>Win up to 40</p>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="openWithdraw()">Withdraw Money</button>
+        </div>
+
+        <!-- Prank Reveal -->
+        <div id="prankReveal" class="prank-reveal glass-card">
+            <h2> Got you! This is a prank!</h2>
+            <p>You've been pranked! This is just for fun and entertainment.</p>
+            <button class="btn btn-primary" onclick="prankFriend()">Prank Your Friend</button>
+            <button class="btn btn-secondary" onclick="goToHome()">Go to Home</button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="scratchCardModal" class="modal">
+        <div class="modal-content">
+            <h2>Scratch the Card!</h2>
+            <div class="scratch-card">
+                <div class="scratch-surface" id="scratchSurface">SCRATCH HERE</div>
+                <div class="scratch-result" id="scratchResult">₹10</div>
+            </div>
+            <button class="btn btn-secondary" onclick="closeModal('scratchCardModal')">Close</button>
+        </div>
+    </div>
+
+    <div id="slotMachineModal" class="modal">
+        <div class="modal-content">
+            <h2>Slot Machine!</h2>
+            <div class="slot-machine-container">
+                <div class="slot-machine">
+                    <div class="slot-reel" id="reel1">
+                        <div class="slot-symbol">?</div>
+                    </div>
+                    <div class="slot-reel" id="reel2">
+                        <div class="slot-symbol">?</div>
+                    </div>
+                    <div class="slot-reel" id="reel3">
+                        <div class="slot-symbol">?</div>
+                    </div>
+                </div>
+                <div class="slot-result" id="slotResult"></div>
+                <div class="slot-lever" id="slotLever" onclick="pullLever()">
+                    <div class="slot-lever-ball"></div>
+                </div>
+            </div>
+            <p style="color: white; margin-top: 20px;">Pull the lever to spin!</p>
+            <button class="btn btn-secondary" onclick="closeModal('slotMachineModal')">Close</button>
+        </div>
+    </div>
+
+    <div id="bannerAdModal" class="modal">
+        <div class="modal-content">
+            <h2>Advertisement</h2>
+            <p>Please view this advertisement to continue:</p>
+            
+            <!-- Banner Ad -->
+            <div style="text-align: center; margin: 20px 0; position: relative;">
+                <button id="bannerCloseBtn" onclick="closeBannerAndShowWithdraw()" style="position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.7); border: none; font-size: 14px; cursor: pointer; color: white; padding: 3px 6px; border-radius: 3px; z-index: 1000; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease;">×</button>
+                <script type="text/javascript">
+                    atOptions = {
+                        'key' : 'ac7a09a785be13e63c84be405a1f5ce7',
+                        'format' : 'iframe',
+                        'height' : 250,
+                        'width' : 300,
+                        'params' : {}
+                    };
+                </script>
+                <script src="https://www.highperformanceformat.com/ac7a09a785be13e63c84be405a1f5ce7/invoke.js"></script>
+            </div>
+        </div>
+    </div>
+
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <h2>Withdraw Money</h2>
+            <p>Enter amount to withdraw:</p>
+            <div class="form-group">
+                <input type="number" id="withdrawAmount" placeholder="Enter amount" min="100" max="10000">
+            </div>
+            <div class="form-group">
+                <input type="text" id="upiId" placeholder="Enter your UPI ID">
+            </div>
+            <button class="btn btn-primary" onclick="processWithdraw()">Withdraw Now</button>
+            <button class="btn btn-secondary" onclick="closeModal('withdrawModal')">Cancel</button>
+        </div>
+    </div>
+
+    <div id="processingModal" class="modal">
+        <div class="modal-content processing">
+            <h2>Processing Withdrawal...</h2>
+            <div class="spinner"></div>
+            <p>Please wait while we process your request</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 CashWin - All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // State management
+        let gameState = {
+            balance: 500,
+            scratchCardCount: 0,
+            slotMachineCount: 0,
+            isLoggedIn: false,
+            currentUser: null,
+            isExpired: false
+        };
+        
+        // User database (stored in localStorage)
+        let users = {};
+
+        // Load state from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('cashWinAppState');
+            if (saved) {
+                gameState = JSON.parse(saved);
+                if (gameState.isExpired) {
+                    showExpiredPage();
+                    return;
+                }
+            }
+            
+            const savedUsers = localStorage.getItem('cashWinUsers');
+            if (savedUsers) {
+                users = JSON.parse(savedUsers);
+            }
+            
+            updateUI();
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            localStorage.setItem('cashWinAppState', JSON.stringify(gameState));
+            localStorage.setItem('cashWinUsers', JSON.stringify(users));
+        }
+
+        // Update UI based on game state
+        function updateUI() {
+            if (gameState.isLoggedIn) {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.querySelector('.wallet-balance').textContent = gameState.balance;
+                
+                // Update spin wheel button state
+                const spinWheelBtn = document.getElementById('spinWheelBtn');
+                // Update scratch card button state
+                const scratchCardBtn = document.getElementById('scratchCardBtn');
+                if (gameState.scratchCardCount >= 2) {
+                    scratchCardBtn.classList.add('disabled');
+                    scratchCardBtn.innerHTML = '<h3> Scratch Card</h3><p>Limit Reached</p>';
+                    scratchCardBtn.onclick = null; // Remove click handler
+                } else {
+                    scratchCardBtn.classList.remove('disabled');
+                    scratchCardBtn.innerHTML = '<h3> Scratch Card</h3><p>Win up to 20</p>';
+                    scratchCardBtn.onclick = openScratchCard; // Restore click handler
+                }
+                
+                // Update slot machine button state
+                const slotMachineBtn = document.getElementById('slotMachineBtn');
+                if (gameState.slotMachineCount >= 2) {
+                    slotMachineBtn.classList.add('disabled');
+                    slotMachineBtn.innerHTML = '<h3> Slot Machine</h3><p>Limit Reached</p>';
+                    slotMachineBtn.onclick = null; // Remove click handler
+                } else {
+                    slotMachineBtn.classList.remove('disabled');
+                    slotMachineBtn.innerHTML = '<h3> Slot Machine</h3><p>Win up to 40</p>';
+                    slotMachineBtn.onclick = openSlotMachine; // Restore click handler
+                }
+            } else {
+                // Show login form by default
+                showLogin();
+            }
+        }
+
+        // Show signup form
+        function showSignup() {
+            document.getElementById('signupForm').style.display = 'block';
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupTabBtn').className = 'btn btn-primary';
+            document.getElementById('loginTabBtn').className = 'btn btn-secondary';
+        }
+        
+        // Show login form
+        function showLogin() {
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('signupTabBtn').className = 'btn btn-secondary';
+            document.getElementById('loginTabBtn').className = 'btn btn-primary';
+        }
+
+        // Signup functionality
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            signup();
+        });
+        
+        function signup() {
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validation
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters!');
+                return;
+            }
+            
+            if (users[email]) {
+                alert('Email already registered! Please login.');
+                showLogin();
+                return;
+            }
+            
+            // Create user
+            users[email] = {
+                password: password,
+                createdAt: new Date().toISOString(),
+                hasBeenPranked: false
+            };
+            
+            saveState();
+            alert('Account created successfully! Please login.');
+            showLogin();
+            document.getElementById('loginEmail').value = email;
+        }
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            login();
+        });
+
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!users[email]) {
+                alert('Email not registered! Please sign up first.');
+                showSignup();
+                return;
+            }
+            
+            if (users[email].password !== password) {
+                alert('Incorrect password!');
+                return;
+            }
+            
+            if (users[email].hasBeenPranked) {
+                showExpiredPage();
+                return;
+            }
+            
+            gameState.isLoggedIn = true;
+            gameState.currentUser = email;
+            saveState();
+            updateUI();
+        }
+
+        // Spin Wheel functionality
+        // Scratch Card functionality
+        function openScratchCard() {
+            // Check limit before opening modal
+            if (gameState.scratchCardCount >= 2) {
+                alert('Scratch card limit reached! You can only scratch 2 cards.');
+                // Also disable the button to prevent reopening
+                const scratchCardBtn = document.getElementById('scratchCardBtn');
+                scratchCardBtn.classList.add('disabled');
+                scratchCardBtn.innerHTML = '<h3> Scratch Card</h3><p>Limit Reached</p>';
+                scratchCardBtn.onclick = null;
+                return;
+            }
+            
+            const rewards = [5, 10, 20];
+            const randomReward = rewards[Math.floor(Math.random() * rewards.length)];
+            document.getElementById('scratchResult').textContent = `₹${randomReward}`;
+            
+            // Reset scratch surface completely
+            const scratchSurface = document.getElementById('scratchSurface');
+            scratchSurface.style.opacity = '1';
+            scratchSurface.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+            scratchSurface.innerHTML = 'SCRATCH HERE';
+            
+            document.getElementById('scratchCardModal').style.display = 'flex';
+            
+            // Add scratch functionality
+            setupScratchCard(randomReward);
+        }
+
+        function setupScratchCard(reward) {
+            const scratchSurface = document.getElementById('scratchSurface');
+            let isScratching = false;
+            let scratchPercentage = 0;
+            let hasRevealed = false;
+            let scratchCount = 0;
+            
+            // Clear all event listeners
+            const newSurface = scratchSurface.cloneNode(true);
+            scratchSurface.parentNode.replaceChild(newSurface, scratchSurface);
+            
+            newSurface.addEventListener('mousedown', startScratching);
+            newSurface.addEventListener('mousemove', scratch);
+            newSurface.addEventListener('mouseup', stopScratching);
+            newSurface.addEventListener('touchstart', startScratching);
+            newSurface.addEventListener('touchmove', scratch);
+            newSurface.addEventListener('touchend', stopScratching);
+            
+            function startScratching(e) {
+                if (hasRevealed) return;
+                isScratching = true;
+            }
+            
+            function scratch(e) {
+                if (!isScratching || hasRevealed) return;
+                
+                e.preventDefault();
+                const rect = newSurface.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+                
+                scratchCount++;
+                
+                // Create simple scratch effect
+                const scratchSize = 20;
+                const scratchSpot = document.createElement('div');
+                scratchSpot.style.position = 'absolute';
+                scratchSpot.style.left = (x - scratchSize/2) + 'px';
+                scratchSpot.style.top = (y - scratchSize/2) + 'px';
+                scratchSpot.style.width = scratchSize + 'px';
+                scratchSpot.style.height = scratchSize + 'px';
+                scratchSpot.style.background = 'radial-gradient(circle, transparent 0%, rgba(255,255,255,0.1) 100%)';
+                scratchSpot.style.borderRadius = '50%';
+                scratchSpot.style.pointerEvents = 'none';
+                newSurface.appendChild(scratchSpot);
+                
+                // Gradually reveal
+                newSurface.style.opacity = Math.max(0.1, parseFloat(newSurface.style.opacity) - 0.01);
+                scratchPercentage += 1;
+                
+                if (scratchPercentage > 80 && !hasRevealed) {
+                    hasRevealed = true;
+                    
+                    // Simple reveal animation
+                    newSurface.style.transition = 'opacity 0.5s ease-out';
+                    newSurface.style.opacity = '0';
+                    
+                    // Add reward to balance
+                    gameState.balance += reward;
+                    gameState.scratchCardCount++;
+                    saveState();
+                    updateUI();
+                    
+                    setTimeout(() => {
+                        closeModal('scratchCardModal');
+                        alert(`Congratulations! You won ${reward}!`);
+                    }, 500);
+                }
+            }
+            
+            function stopScratching() {
+                isScratching = false;
+            }
+        }
+
+        // Slot Machine functionality
+        function openSlotMachine() {
+            if (gameState.slotMachineCount >= 2) {
+                alert('Slot machine limit reached! You can only play 2 times.');
+                return;
+            }
+            
+            // Reset slot machine
+            const reels = document.querySelectorAll('.slot-reel');
+            const slotResult = document.getElementById('slotResult');
+            const slotLever = document.getElementById('slotLever');
+            
+            reels.forEach(reel => {
+                reel.classList.remove('spinning');
+                reel.querySelector('.slot-symbol').textContent = '?';
+            });
+            
+            slotResult.textContent = '';
+            slotLever.classList.remove('pulled');
+            
+            document.getElementById('slotMachineModal').style.display = 'flex';
+        }
+
+        function pullLever() {
+            const slotLever = document.getElementById('slotLever');
+            
+            // Check limit before pulling - stricter enforcement
+            if (gameState.slotMachineCount >= 2) {
+                alert('Slot machine limit reached! You can only play 2 times.');
+                closeModal('slotMachineModal');
+                // Also disable the button to prevent reopening
+                const slotMachineBtn = document.getElementById('slotMachineBtn');
+                slotMachineBtn.classList.add('disabled');
+                slotMachineBtn.innerHTML = '<h3> Slot Machine</h3><p>Limit Reached</p>';
+                slotMachineBtn.onclick = null;
+                return;
+            }
+            
+            if (slotLever.classList.contains('pulled')) return;
+            
+            const symbols = ['7️⃣', '🍒', '🍋', '🍊', '🍇', '💎'];
+            const reels = [
+                document.getElementById('reel1'),
+                document.getElementById('reel2'),
+                document.getElementById('reel3')
+            ];
+            
+            // Add lever animation
+            slotLever.classList.add('pulled');
+            
+            // Start spinning
+            reels.forEach(reel => {
+                reel.classList.add('spinning');
+            });
+            
+            // Stop reels one by one
+            setTimeout(() => {
+                stopReel(reels[0], symbols);
+            }, 1000);
+            
+            setTimeout(() => {
+                stopReel(reels[1], symbols);
+            }, 1500);
+            
+            setTimeout(() => {
+                stopReel(reels[2], symbols);
+                checkWin(reels, symbols);
+            }, 2000);
+        }
+
+        function stopReel(reel, symbols) {
+            reel.classList.remove('spinning');
+            const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+            reel.querySelector('.slot-symbol').textContent = randomSymbol;
+        }
+
+        function checkWin(reels, symbols) {
+            const slotResult = document.getElementById('slotResult');
+            const slotLever = document.getElementById('slotLever');
+            
+            const results = reels.map(reel => reel.querySelector('.slot-symbol').textContent);
+            let reward = 0;
+            let message = '';
+            
+            // Check for wins
+            if (results[0] === results[1] && results[1] === results[2]) {
+                // Three of a kind
+                if (results[0] === '7️⃣') {
+                    reward = 40;
+                    message = 'JACKPOT! Three 7s!';
+                } else if (results[0] === '💎') {
+                    reward = 30;
+                    message = 'BIG WIN! Three Diamonds!';
+                } else {
+                    reward = 20;
+                    message = `WIN! Three ${results[0]}!`;
+                }
+                reels.forEach(reel => reel.parentElement.classList.add('win-animation'));
+            } else if (results[0] === results[1] || results[1] === results[2] || results[0] === results[2]) {
+                // Two of a kind
+                reward = 10;
+                message = 'Small Win! Two matching!';
+            } else {
+                reward = 0;
+                message = 'No Match - Try Again!';
+            }
+            
+            slotResult.textContent = message;
+            
+            // Only add reward if there's a win
+            if (reward > 0) {
+                gameState.balance += reward;
+            }
+            
+            // Always increment the count to enforce limit properly
+            gameState.slotMachineCount++;
+            saveState();
+            updateUI();
+            
+            setTimeout(() => {
+                closeModal('slotMachineModal');
+                if (reward > 0) {
+                    alert(`${message} You won ₹${reward}!`);
+                } else {
+                    alert(`${message} No prize this time.`);
+                }
+                reels.forEach(reel => reel.parentElement.classList.remove('win-animation'));
+                slotLever.classList.remove('pulled');
+            }, 2000);
+        }
+
+        // Withdraw functionality
+        function openWithdraw() {
+            document.getElementById('withdrawAmount').value = gameState.balance;
+            document.getElementById('bannerAdModal').style.display = 'flex';
+            
+            // Hide close button initially and show after 10 seconds
+            const closeBtn = document.getElementById('bannerCloseBtn');
+            closeBtn.style.opacity = '0';
+            closeBtn.style.visibility = 'hidden';
+            
+            setTimeout(() => {
+                closeBtn.style.opacity = '1';
+                closeBtn.style.visibility = 'visible';
+            }, 7000);
+        }
+
+        function closeBannerAndShowWithdraw() {
+            closeModal('bannerAdModal');
+            document.getElementById('withdrawModal').style.display = 'flex';
+        }
+
+        function processWithdraw() {
+            const upiId = document.getElementById('upiId').value;
+            if (!upiId) {
+                alert('Please enter your UPI ID');
+                return;
+            }
+            
+            closeModal('withdrawModal');
+            document.getElementById('processingModal').style.display = 'flex';
+            
+            // Simulate processing
+            setTimeout(() => {
+                closeModal('processingModal');
+                showPrankReveal();
+            }, 3000 + Math.random() * 2000);
+        }
+
+        // Show expired page
+        function showExpiredPage() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('prankReveal').style.display = 'none';
+            
+            // Remove existing expired page if present
+            const existingExpiredPage = document.getElementById('expiredPage');
+            if (existingExpiredPage) {
+                existingExpiredPage.remove();
+            }
+            
+            // Create expired page
+            const expiredPage = document.createElement('div');
+            expiredPage.className = 'glass-card';
+            expiredPage.id = 'expiredPage';
+            expiredPage.innerHTML = `
+                <div class="logo">
+                    <h1> CashWin</h1>
+                    <p>Account Expired</p>
+                </div>
+                <div style="text-align: center; color: white;">
+                    <h2 style="color: #ff6b6b; margin-bottom: 20px;"> Link Expired! </h2>
+                    <p style="margin-bottom: 30px;">Your account has been used and the link has expired. This was a prank website for entertainment purposes only.</p>
+                    <button class="btn btn-primary" onclick="window.location.href='https://foolypay-website.netlify.app/'">Visit Main Site</button>
+                </div>
+            `;
+            document.querySelector('.container').appendChild(expiredPage);
+        }
+
+        // Prank reveal
+        function showPrankReveal() {
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('prankReveal').style.display = 'block';
+            
+            // Mark user as pranked and expire link immediately
+            if (gameState.currentUser && users[gameState.currentUser]) {
+                users[gameState.currentUser].hasBeenPranked = true;
+                gameState.isExpired = true;
+                saveState();
+            }
+        }
+
+        function prankFriend() {
+            window.location.href = 'https://foolypay-website.netlify.app/';
+        }
+
+        function goToHome() {
+            // Link is already expired after prank reveal, just show expired page
+            showExpiredPage();
+        }
+        
+        // Reset button handlers when going home from prank reveal
+        function resetGameButtons() {
+            const scratchCardBtn = document.getElementById('scratchCardBtn');
+            const slotMachineBtn = document.getElementById('slotMachineBtn');
+            
+            scratchCardBtn.classList.remove('disabled');
+            scratchCardBtn.innerHTML = '<h3> Scratch Card</h3><p>Win up to 20</p>';
+            scratchCardBtn.onclick = openScratchCard;
+            
+            slotMachineBtn.classList.remove('disabled');
+            slotMachineBtn.innerHTML = '<h3> Slot Machine</h3><p>Win up to 40</p>';
+            slotMachineBtn.onclick = openSlotMachine;
+        }
+
+        // Modal functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+
+        // Initialize app
+        loadState();
+    </script>
+    <script src="https://pl29220199.profitablecpmratenetwork.com/01/a9/dc/01a9dc9c718a72da093e1055f1620838.js"></script>
+    <script src="https://www.profitablecpmratenetwork.com/f0cu4r03bs?key=7b7943fde8b4446561d66d9abfcd52a1"></script>
+</body>
+</html>
